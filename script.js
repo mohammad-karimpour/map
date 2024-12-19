@@ -1,4 +1,4 @@
-869let map = L.map('map', {
+let map = L.map('map', {
     center: [36.127,45.633],
     zoom: 6,
     rotate: true,

@@ -228,7 +228,7 @@ let location_user = () => {
 
 
 
-
+let nn = 1
 
 
 /* ----------------- توابع ----------------- */
@@ -238,6 +238,7 @@ let activ_user_locatin = async  ()=>{
     map.flyTo([lat_lon.lat, lat_lon.lng], 16);
     setInterval(() => {
     document.getElementById('pp').innerHTML = JSON.stringify(lat_lon);
+nn+=1
  user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
     }, 1000);
 }

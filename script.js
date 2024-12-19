@@ -237,7 +237,7 @@ let activ_user_locatin = async  ()=>{
     user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
     map.flyTo([lat_lon.lat, lat_lon.lng], 16);
     setInterval(() => {
-        user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
+    document.getElementById('pp').innerHTML = lat_lon user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
     }, 10);
 }
 

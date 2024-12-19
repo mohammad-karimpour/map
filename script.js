@@ -230,8 +230,9 @@ let location_user = () => {
 
 let nn = 1;
 
-
+*/
 /* ----------------- توابع ----------------- */
+/*
 let activ_user_locatin = async  ()=>{
     let lat_lon = await  location_user()
     user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);

@@ -238,7 +238,7 @@ let activ_user_locatin = async  ()=>{
     map.flyTo([lat_lon.lat, lat_lon.lng], 16);
     setInterval(() => {
     document.getElementById('pp').innerHTML = nn
-nn+=1
+nn= nn+1
  user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
     }, 1000);
 }

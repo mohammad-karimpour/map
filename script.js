@@ -217,18 +217,6 @@ let location_user = () => {
     });
 };
 
-// Example usage
-location_user()
-    .then(location => {
-        console.log('Location found:', location);
-        console.log('Latitude:', location.lat);
-        console.log('Longitude:', location.lng);
-        console.log('Accuracy (radius):', location.accuracy);
-    })
-    .catch(error => {
-        alert(error);  // Show error message to user
-    });
-
 
 
 
@@ -322,8 +310,8 @@ let show_routing = (MB_lat,MB_lon,MQ_lat,MQ_lon)=>{
 
 
 
-let run_navigator_user = (MQ_lat,MQ_lon)=>{
-    let locatiton = location_user()
+let run_navigator_user = async (MQ_lat,MQ_lon)=>{
+    let locatiton = await location_user()
     map.on('locationfound', function(e) {
         if (MAB_marker) {
             map.removeLayer(MAB_marker);

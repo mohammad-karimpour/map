@@ -198,7 +198,7 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 /* ----------------- داده ها ----------------- */
 let location_user = () => {
     return new Promise((resolve, reject) => {
-        map.locate({ setView: true, maxZoom: 16, watch: true });  // watch: true برای ردیابی مداوم موقعیت
+        map.locate({ setView: false, maxZoom: 16, watch: true });  // watch: true برای ردیابی مداوم موقعیت
     });
 };
 

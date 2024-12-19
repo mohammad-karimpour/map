@@ -201,43 +201,35 @@ let location_user = () => {
         map.locate({ setView: true, maxZoom: 16 });
         
         map.on('locationfound', function(e) {
-            // Resolve the promise with latitude, longitude, and accuracy (radius)
             resolve({
-                lat: e.latlng.lat,     // عرض جغرافیایی (latitude)
-                lng: e.latlng.lng,     // طول جغرافیایی (longitude)
-                accuracy: e.accuracy   // دقت موقعیت (radius)
+                lat: e.latlng.lat,
+                lng: e.latlng.lng,
+                accuracy: e.accuracy
             });
         });
         
         map.on('locationerror', function(e) {
-            // Reject the promise if there's an error
             reject('موقعیت پیدا نشد.');
         });
     });
 };
 
+let activ_user_locatin = async () => {
+    try {
+        let lat_lon = await location_user();
+        user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
+        map.flyTo([lat_lon.lat, lat_lon.lng], 16);
 
+        // به روزرسانی موقعیت نشانگر در هنگام تغییر موقعیت
+        map.on('locationfound', function(e) {
+            user_location_marker.setLatLng(e.latlng);
+            map.flyTo(e.latlng, 16);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
 
-
-
-
-
-
-
-
-
-
-
-
-/* ----------------- توابع ----------------- */
-let activ_user_locatin = async  ()=>{
-    let lat_lon = await  location_user()
-    user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
-    map.flyTo([lat_lon.lat, lat_lon.lng], 16);
-    setInterval(() => {
-        user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
-    }, 10);
-}
 
 let routeControl =null;
 let show_routing = (MB_lat,MB_lon,MQ_lat,MQ_lon)=>{

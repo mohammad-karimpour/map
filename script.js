@@ -224,7 +224,6 @@ location_user()
         console.log('Latitude:', location.lat);
         console.log('Longitude:', location.lng);
         console.log('Accuracy (radius):', location.accuracy);
-        return [location.lat, location.lng]
     })
     .catch(error => {
         alert(error);  // Show error message to user
@@ -247,13 +246,12 @@ location_user()
 /* ----------------- توابع ----------------- */
 let activ_user_locatin = async  ()=>{
     let lat_lon = await  location_user()
-    user_location_marker = L.marker([lat_lon[0], lat_lon[1]], {icon: marker_icon}).addTo(map);
-    map.flyTo([lat_lon[0], lat_lon[1]], 16);
+    user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
+    map.flyTo([lat_lon.lat, lat_lon.lng], 16);
     setInterval(() => {
-        user_location_marker.setLatLng([lat_lon[0], lat_lon[1]]); 
+        user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
     }, 10);
 }
-
 
 
 

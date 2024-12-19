@@ -212,8 +212,6 @@ let activ_user_locatin = async () => {
         // به روز رسانی موقعیت نشانگر با استفاده از رویداد locationfound
         map.on('locationfound', function(e) {
             user_location_marker.setLatLng(e.latlng);  // به روزرسانی موقعیت نشانگر
-            map.flyTo(e.latlng, 16);  // انتقال نقشه به موقعیت جدید
-            document.getElementById('pp').innerHTML(JSON.stringify(lat_lon))
         });
 
         // در صورت خطا، پیام خطا را نمایش می‌دهیم

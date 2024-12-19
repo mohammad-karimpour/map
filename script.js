@@ -1,4 +1,4 @@
-let map = L.map('map', {
+869let map = L.map('map', {
     center: [36.127,45.633],
     zoom: 6,
     rotate: true,
@@ -378,7 +378,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مک#ان</button><button id="startrunnav" class="show">شروع</button>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">vمک#ان</button><button id="startrunnav" class="show">شروع</button>';
         return container;
     }
 });

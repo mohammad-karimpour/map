@@ -246,7 +246,6 @@ location_user()
 /* ----------------- توابع ----------------- */
 let activ_user_locatin = async  ()=>{
     let lat_lon = await  location_user()
-    alert(lat_lon)
     user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
     map.flyTo([lat_lon.lat, lat_lon.lng], 16);
     setInterval(() => {
@@ -329,13 +328,13 @@ let run_navigator_user = (MQ_lat,MQ_lon)=>{
         if (MAB_marker) {
             map.removeLayer(MAB_marker);
         }
-        let user_navigator_location = L.marker([locatiton[0], locatiton[1]], {icon: navigator_icon}).addTo(map);
+        let user_navigator_location = L.marker([locatiton.lat, locatiton.lng], {icon: navigator_icon}).addTo(map);
         map.flyTo([U_lat,U_lon], 18)
         if (routeControl) {
-            routeControl.setWaypoints([[locatiton[0], locatiton[1]], [MQ_lat,MQ_lon]]); 
+            routeControl.setWaypoints([[locatiton.lat, locatiton.lng], [MQ_lat,MQ_lon]]); 
         } else {
             routeControl = L.Routing.control({
-                waypoints: [L.latLng(locatiton[0], locatiton[1]), L.latLng(MQ_lat,MQ_lon)],
+                waypoints: [L.latLng(locatiton.lat, locatiton.lng), L.latLng(MQ_lat,MQ_lon)],
                 routeWhileDragging: false,
                 createMarker: function() {
                     return null;
@@ -350,7 +349,7 @@ let run_navigator_user = (MQ_lat,MQ_lon)=>{
 
         }
         setInterval(()=>{
-            routeControl.setWaypoints([[locatiton[0], locatiton[1]], [MQ_lat,MQ_lon]]);
+            routeControl.setWaypoints([[locatiton.lat, locatiton.lng], [MQ_lat,MQ_lon]]);
             let L_ine = routeControl.getRoute().closestPoint(locatiton);
             user_navigator_location.setLatLng(L_ine.latLng);
         },10)

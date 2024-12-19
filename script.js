@@ -156,9 +156,9 @@ let AddMB = (lat,lng,name)=>{
 
 
 
-let GPSnav = ()=>{
-    let location = location_user()
-    show_routing(location[0],location[1],latLng.lat,latLng.lng)
+let GPSnav = async ()=>{
+    let location = await location_user()
+    show_routing(location.lat,location.lng,latLng.lat,latLng.lng)
 }
 
 

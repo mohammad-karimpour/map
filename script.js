@@ -245,14 +245,15 @@ location_user()
 
 
 /* ----------------- توابع ----------------- */
-let activ_user_locatin = ()=>{
-    let lat_lon = location_user()
-    user_location_marker = L.marker([lat_lon[0], lat_lon[1]], {icon: location_icon}).addTo(map);
+let activ_user_locatin = async  ()=>{
+    let lat_lon = await  location_user()
+    user_location_marker = L.marker([lat_lon[0], lat_lon[1]], {icon: marker_icon}).addTo(map);
     map.flyTo([lat_lon[0], lat_lon[1]], 16);
     setInterval(() => {
         user_location_marker.setLatLng([lat_lon[0], lat_lon[1]]); 
     }, 10);
 }
+
 
 
 

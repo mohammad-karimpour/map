@@ -1,0 +1,42 @@
+#map{
+    height: 80vh;
+}
+.gps_button{
+    background-color: rgb(219, 182, 17);
+    color: white;
+    width: 30px; height: 30px;
+}
+
+.context-menu {
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    display: none;
+    z-index: 9999; /* مطمئن شوید که منو در بالاترین لایه قرار دارد */
+}
+.context-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.context-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+.navigaatorbox{
+    width: 100%; height: 20vh;
+    background-color: #f0f0f0;
+}
+#makans{
+    background-color: antiquewhite;
+    margin: 10px;
+    border: 2px solid purple;
+}
+#makans span{
+    padding: 35px;
+    border-bottom:  1px solid black;
+    font-size: 15px;
+}
+.show{
+    display: none;
+}

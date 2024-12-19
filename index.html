@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mazwar-map</title>
+    <!-- Use CDN for Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <!-- Use CDN for Leaflet Routing Machine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.5/dist/leaflet-routing-machine.css" />
+    
+    <!-- Use CDN for Leaflet Geocoder -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.0.0/dist/Control.Geocoder.css" />
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="map"></div>
+    <ul class="context-menu" id="contextMenu">
+        <li onclick="">افزودن مکان عمومی</li>
+        <li onclick="">افزودن نشانگر شخصی</li>
+        <li onclick="of_MQ_navigator()">مسیریابی</li>
+        <li id="copyCoords">مختصات جعرافیایی</li>
+    </ul>
+    <div id="navigatorbox" class="show">
+        <button>روی نقشه</button>
+        <button onclick="GPSnav()">موقعیت من</button>
+        <button id="searchbutton">search</button>
+        <input id="mabdasearchinput" type="text" placeholder="جستوجو مبدا">
+        <input id="maqsadsearchinput" type="text" placeholder="جستوجو مقصد">
+        <button id="startnav" class="show">مسیر یابی</button>
+        
+        <div id="makans"></div>
+    </div>
+    
+</body>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.5/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder@2.0.0/dist/Control.Geocoder.js"></script>
+<script src="https://unpkg.com/leaflet-rotate@0.1.0/leaflet-rotate.js"></script>
+<script src="https://unpkg.com/leaflet-rotatedmarker@0.1.1/leaflet.rotatedMarker.js"></script>
+<script src="./script.js"></script>
+</html>

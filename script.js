@@ -196,7 +196,6 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 
 
 /* ----------------- داده ها ----------------- */
-/*
 let location_user = () => {
     return new Promise((resolve, reject) => {
         map.locate({ setView: true, maxZoom: 16 });
@@ -228,72 +227,17 @@ let location_user = () => {
 
 
 
-let nn = 1;
 
-*/
+
 /* ----------------- توابع ----------------- */
-/*
 let activ_user_locatin = async  ()=>{
     let lat_lon = await  location_user()
     user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
     map.flyTo([lat_lon.lat, lat_lon.lng], 16);
     setInterval(() => {
-    document.getElementById('pp').innerHTML = 'nn'
-    nn = nn+1
- user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
-    }, 1000);
+        user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]); 
+    }, 10);
 }
-
-*/
-
-let location_user = () => {
-    return new Promise((resolve, reject) => {
-        map.locate({ setView: true, maxZoom: 16 });
-
-        map.on('locationfound', function(e) {
-            resolve({
-                lat: e.latlng.lat,
-                lng: e.latlng.lng,
-                accuracy: e.accuracy
-            });
-        });
-
-        map.on('locationerror', function(e) {
-            reject('موقعیت پیدا نشد.');
-        });
-    });
-};
-
-let nn = 1;
-
-// ----------------- توابع -----------------
-let activ_user_location = async () => {
-    try {
-        // دریافت موقعیت اولیه کاربر
-        let lat_lon = await location_user();
-        let user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], { icon: marker_icon }).addTo(map);
-
-        map.flyTo([lat_lon.lat, lat_lon.lng], 16);
-
-        setInterval(async () => {
-            try {
-                // دریافت موقعیت جدید کاربر
-                lat_lon = await location_user();
-
-                // به‌روزرسانی موقعیت نشانگر
-                user_location_marker.setLatLng([lat_lon.lat, lat_lon.lng]);
-
-                // به‌روزرسانی مقدار `pp`
-                document.getElementById('pp').innerHTML = nn;
-                nn += 1;
-            } catch (err) {
-                console.error('خطا در به‌روزرسانی موقعیت:', err);
-            }
-        }, 1000);
-    } catch (err) {
-        console.error('خطا در فعال‌سازی موقعیت کاربر:', err);
-    }
-};
 
 let routeControl =null;
 let show_routing = (MB_lat,MB_lon,MQ_lat,MQ_lon)=>{

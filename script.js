@@ -197,17 +197,38 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 
 /* ----------------- داده ها ----------------- */
 
-let location_user = ()=>{
-    map.locate({setView: true, maxZoom: 16});
-    map.on('locationfound', function(e) {
-         return radius = e.accuracy;
-
-    });
-    // در صورت بروز خطا در موقعیت‌یابی
-    map.on('locationerror', function(e) {
-         alert('موقعیت پیدا نشد.')
+let location_user = () => {
+    return new Promise((resolve, reject) => {
+        map.locate({ setView: true, maxZoom: 16 });
+        
+        map.on('locationfound', function(e) {
+            // Resolve the promise with latitude, longitude, and accuracy (radius)
+            resolve({
+                lat: e.latlng.lat,     // عرض جغرافیایی (latitude)
+                lng: e.latlng.lng,     // طول جغرافیایی (longitude)
+                accuracy: e.accuracy   // دقت موقعیت (radius)
+            });
+        });
+        
+        map.on('locationerror', function(e) {
+            // Reject the promise if there's an error
+            reject('موقعیت پیدا نشد.');
+        });
     });
 };
+
+// Example usage
+location_user()
+    .then(location => {
+        console.log('Location found:', location);
+        console.log('Latitude:', location.lat);
+        console.log('Longitude:', location.lng);
+        console.log('Accuracy (radius):', location.accuracy);
+        return [location.lat, location.lng]
+    })
+    .catch(error => {
+        alert(error);  // Show error message to user
+    });
 
 
 

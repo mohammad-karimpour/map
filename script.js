@@ -42,7 +42,7 @@ let marker_icon = L.icon({
     popupAnchor: [-3, -76],  
 });
 let navigator_icon = L.icon({
-    iconUrl: 'image/runmarker.png', 
+    iconUrl: 'images/runmarker.png', 
     iconSize: [30, 30],  
     iconAnchor: [15, 15],  
     popupAnchor: [-3, -76], 

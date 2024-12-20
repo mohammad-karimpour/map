@@ -296,7 +296,7 @@ let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
         // فعال‌سازی دکمه برای شروع مسیریابی
         let startrunnav = document.getElementById('startrunnav');
         startrunnav.classList.remove("show");
-        startrunnav.setAttribute("onclick", `run_navigator_user(${MB_lat},${MB_lon})`);
+        startrunnav.setAttribute("onclick", `run_navigator_user(${MQ_lat},${MQ_lon})`);
 
         // نمایش اطلاعات مسیریابی (اختیاری)
         // var route = e.routes[0];

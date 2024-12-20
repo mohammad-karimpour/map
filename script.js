@@ -375,8 +375,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         // به‌روزرسانی موقعیت نشانگر کاربر به نزدیک‌ترین نقطه
         user_navigator_location.setLatLng(closestPoint.latLng);
 
-        // اگر نیاز به حرکت نقشه به نزدیک‌ترین نقطه دارید:
-        map.flyTo(closestPoint.latLng, 16);
+
     } else {
         console.error("مسیر هنوز محاسبه نشده است.");
     }

@@ -240,9 +240,7 @@ let activ_user_locatin = async () => {
             let lon = position.coords.longitude;
 
             user_location_marker.setLatLng([lat, lon]);  // به‌روزرسانی موقعیت نشانگر
-
-            // حرکت نقشه به موقعیت جدید
-            map.flyTo([lat, lon], 16);
+            
         }, function(error) {
             console.error('موقعیت پیدا نشد:', error);  // در صورت خطا، پیام خطا را نمایش می‌دهیم
         }, {

@@ -261,67 +261,55 @@ let activ_user_locatin = async () => {
 
 
 let routeControl =null;
-let show_routing = (MB_lat,MB_lon,MQ_lat,MQ_lon)=>{
+let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
     if (routeControl) {
-        routeControl.setWaypoints([[MB_lat,MB_lon], [MQ_lat,MQ_lon]]); 
-    }else{
-    routeControl = L.Routing.control({
-        waypoints: [L.latLng(MB_lat,MB_lon), L.latLng(MQ_lat,MQ_lon)],
-        routeWhileDragging: false,
-        showAlternatives: true,
-        fitSelectedRoutes: false,
-        createMarker: function() {
-            return null;
-        },
-        lineOptions: {
-            styles: [
-                { color: 'blue', weight: 8, opacity: 0.8 }
-            ]
-        }, 
-        altLineOptions:{
-            styles: [
-                { color: 'red', weight: 6, opacity: 0.5 }
-            ]
-        },                      
-    }).addTo(map);
-}
+        // اگر کنترل مسیریابی از قبل ایجاد شده باشد، فقط مسیر را به‌روز می‌کنیم
+        routeControl.setWaypoints([L.latLng(MB_lat, MB_lon), L.latLng(MQ_lat, MQ_lon)]);
+    } else {
+        // ایجاد کنترل مسیریابی جدید
+        routeControl = L.Routing.control({
+            waypoints: [L.latLng(MB_lat, MB_lon), L.latLng(MQ_lat, MQ_lon)],
+            routeWhileDragging: false,  // مسیر هنگام کشیدن نمایش داده نمی‌شود
+            showAlternatives: true,     // نمایش مسیرهای جایگزین
+            fitSelectedRoutes: false,   // جابجایی نقشه به طور خودکار
+            createMarker: function() {
+                return null;  // جلوگیری از ایجاد نشانگر برای هر نقطه
+            },
+            lineOptions: {
+                styles: [
+                    { color: 'blue', weight: 8, opacity: 0.8 }
+                ]
+            },
+            altLineOptions: {
+                styles: [
+                    { color: 'red', weight: 6, opacity: 0.5 }
+                ]
+            }
+        }).addTo(map);
+    }
+
+    // رویداد routesfound: وقتی مسیر پیدا شد
     routeControl.on('routesfound', function(e) {
-        map.setView([MB_lat, MB_lon], 8);
-        MAB_marker = L.marker([MB_lat, MB_lon], {icon: marker_icon}).addTo(map);
-        MAQ_marker = L.marker([MQ_lat, MQ_lon], {icon: marker_icon}).addTo(map);
-        console.log( e);
+        // تنظیم نمای نقشه بر روی نقطه مبدا
+        map.setView([MB_lat, MB_lon], 11);
 
-
-         
-        // var route = e.routes[0];
-        // console.log("مسیر پیدا شده: ");
-        // console.log("طول مسیر: " + route.summary.totalDistance + " متر");
-        // console.log("زمان تخمینی: " + route.summary.totalTime / 60 + " دقیقه");
-        // console.log("مسیری که باید طی کنید: ");
-        // console.log(route.coordinates)
-        // console.log("مسیر با نوع وسیله نقلیه: ", route.instructions)
-        // console.log("محدوده زمان تخمینی: ", route.summary.totalTime);
-        // console.log("مسیر با مراحل مختلف: ", route.steps);
-
+        // فعال‌سازی دکمه برای شروع مسیریابی
         let startrunnav = document.getElementById('startrunnav');
         startrunnav.classList.remove("show");
         startrunnav.setAttribute("onclick", `run_navigator_user(${MB_lat},${MB_lon})`);
 
-        // var instructionsHtml = "<h3>دستورالعمل‌ها:</h3>";
-
-        // route.instructions.forEach(function(step, index) {
-        //     instructionsHtml += "<p>" + (index + 1) + ". " + step.text + "</p>";
-        // });
-
-        // document.getElementById("instructions").innerHTML = instructionsHtml;
+        // نمایش اطلاعات مسیریابی (اختیاری)
+        // var route = e.routes[0];
+        // console.log("طول مسیر: " + route.summary.totalDistance + " متر");
+        // console.log("زمان تخمینی: " + route.summary.totalTime / 60 + " دقیقه");
+        // console.log(route.instructions);
     });
-    routeControl.on('routeselected', function(e) {
-        console.log(e);
-        
-    }); 
 
-}
-
+    // رویداد routeselected: وقتی مسیری انتخاب می‌شود
+    // routeControl.on('routeselected', function(e) {
+    //     console.log('مسیری که انتخاب شد:', e);
+    // });
+};
 
 
 

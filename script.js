@@ -349,6 +349,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         }
 
         // ردیابی مداوم موقعیت کاربر با استفاده از watchPosition
+map.setZoom(22)
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
@@ -357,7 +358,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             user_navigator_location.setLatLng([lat, lon]);
 
             // حرکت نقشه به موقعیت جدید
-            map.flyTo([lat, lon], 22);
+            map.panTo([lat, lon] );
 
             // به‌روزرسانی مسیر با نقطه جدید موقعیت کاربر
             routeControl.setWaypoints([L.latLng(lat, lon), L.latLng(MQ_lat, MQ_lon)]);

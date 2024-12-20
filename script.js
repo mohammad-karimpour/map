@@ -335,7 +335,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             // ایجاد کنترل مسیریابی جدید
             routeControl = L.Routing.control({
                 waypoints: [L.latLng(location.coords.latitude, location.coords.longitude), L.latLng(MQ_lat, MQ_lon)],
-                routeWhileDragging: false,
+                routeWhileDragging: true,
                 createMarker: function () {
                     return null;  // جلوگیری از ایجاد نشانگر برای هر نقطه مسیر
                 },
@@ -360,8 +360,7 @@ map.setZoom(22)
             // حرکت نقشه به موقعیت جدید
             map.panTo([lat, lon] );
 
-            // به‌روزرسانی مسیر با نقطه جدید موقعیت کاربر
-            routeControl.setWaypoints([L.latLng(lat, lon), L.latLng(MQ_lat, MQ_lon)]);
+      
 
             // به‌روز کردن موقعیت کاربر روی مسیر
                 if (routeControl && routeControl.getRoute()) {

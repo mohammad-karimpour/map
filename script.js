@@ -198,41 +198,65 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 /* ----------------- داده ها ----------------- */
 let location_user = () => {
     return new Promise((resolve, reject) => {
-        map.locate({ setView: false, maxZoom: 16, watch: true });  // watch: true برای ردیابی مداوم موقعیت
-
-        // رویداد locationfound
-        map.on('locationfound', function(e) {
-            resolve(e.latlng);  // موقعیت کاربر را ارسال می‌کنیم
-        });
-
-        // رویداد locationerror
-        map.on('locationerror', function(e) {
-            reject('موقعیت پیدا نشد: ' + e.message);  // در صورت بروز خطا
-        });
+        if (navigator.geolocation) {
+            // شروع ردیابی موقعیت کاربر به صورت مداوم
+            const watchId = navigator.geolocation.watchPosition(
+                function(position) {
+                    // ارسال موقعیت جدید به تابع resolve
+                    resolve(position);
+                },
+                function(error) {
+                    // در صورت بروز خطا، ارسال خطا به تابع reject
+                    reject(error);
+                },
+                {
+                    enableHighAccuracy: true, // درخواست دقت بالا
+                    maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
+                    timeout: 5000             // تایم‌اوت برای دریافت موقعیت
+                }
+            );
+        } else {
+            reject(new Error("Geolocation is not supported by this browser."));
+        }
     });
 };
+
+/*------------------توابع------------------- */
 
 let activ_user_locatin = async () => {
     try {
         // ابتدا موقعیت اولیه کاربر را پیدا می‌کنیم
         let lat_lon = await location_user();
-        let user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
-        map.flyTo([lat_lon.lat, lat_lon.lng], 16);
+        
+        // اضافه کردن نشانگر به نقشه با موقعیت اولیه کاربر
+        user_location_marker = L.marker([lat_lon.coords.latitude, lat_lon.coords.longitude], {icon: marker_icon}).addTo(map);
+        
+        // حرکت نقشه به موقعیت کاربر
+        map.flyTo([lat_lon.coords.latitude, lat_lon.coords.longitude], 16);
 
-        // به روز رسانی موقعیت نشانگر با استفاده از رویداد locationfound
-        map.on('locationfound', function(e) {
-            user_location_marker.setLatLng(e.latlng);  // به روزرسانی موقعیت نشانگر
-        });
+        // ردیابی موقعیت کاربر به صورت مداوم
+        navigator.geolocation.watchPosition(function(position) {
+            // به روزرسانی موقعیت نشانگر با موقعیت جدید
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
 
-        // در صورت خطا، پیام خطا را نمایش می‌دهیم
-        map.on('locationerror', function(e) {
-            console.error('موقعیت پیدا نشد:', e);
+            user_location_marker.setLatLng([lat, lon]);  // به‌روزرسانی موقعیت نشانگر
+
+            // حرکت نقشه به موقعیت جدید
+            map.flyTo([lat, lon], 16);
+        }, function(error) {
+            console.error('موقعیت پیدا نشد:', error);  // در صورت خطا، پیام خطا را نمایش می‌دهیم
+        }, {
+            enableHighAccuracy: true, // دقت بالا
+            maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
+            timeout: 5000             // تایم‌اوت برای دریافت موقعیت
         });
 
     } catch (error) {
-        console.error('خطا:', error);
+        console.error(error);
     }
 };
+
 
 
 

@@ -359,7 +359,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             user_navigator_location.setLatLng([lat, lon]);
 
             // حرکت نقشه به موقعیت جدید
-            map.flyTo([lat, lon], 16);
+            map.flyTo([lat, lon], 22);
 
             // به‌روزرسانی مسیر با نقطه جدید موقعیت کاربر
             routeControl.setWaypoints([L.latLng(lat, lon), L.latLng(MQ_lat, MQ_lon)]);

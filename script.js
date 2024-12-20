@@ -199,6 +199,16 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 let location_user = () => {
     return new Promise((resolve, reject) => {
         map.locate({ setView: false, maxZoom: 16, watch: true });  // watch: true برای ردیابی مداوم موقعیت
+
+        // رویداد locationfound
+        map.on('locationfound', function(e) {
+            resolve(e.latlng);  // موقعیت کاربر را ارسال می‌کنیم
+        });
+
+        // رویداد locationerror
+        map.on('locationerror', function(e) {
+            reject('موقعیت پیدا نشد: ' + e.message);  // در صورت بروز خطا
+        });
     });
 };
 
@@ -206,7 +216,7 @@ let activ_user_locatin = async () => {
     try {
         // ابتدا موقعیت اولیه کاربر را پیدا می‌کنیم
         let lat_lon = await location_user();
-        user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
+        let user_location_marker = L.marker([lat_lon.lat, lat_lon.lng], {icon: marker_icon}).addTo(map);
         map.flyTo([lat_lon.lat, lat_lon.lng], 16);
 
         // به روز رسانی موقعیت نشانگر با استفاده از رویداد locationfound
@@ -218,10 +228,12 @@ let activ_user_locatin = async () => {
         map.on('locationerror', function(e) {
             console.error('موقعیت پیدا نشد:', e);
         });
+
     } catch (error) {
-        console.error(error);
+        console.error('خطا:', error);
     }
 };
+
 
 
 

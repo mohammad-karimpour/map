@@ -328,59 +328,71 @@ let show_routing = (MB_lat,MB_lon,MQ_lat,MQ_lon)=>{
 
 
 
+
+
 let run_navigator_user = async (MQ_lat, MQ_lon) => {
-    // درخواست موقعیت کاربر
-    let location = await location_user();
+    try {
+        // درخواست موقعیت کاربر
+        let location = await location_user();
 
-    let user_navigator_location = L.marker([location.lat, location.lng], {icon: navigator_icon}).addTo(map);
-    if (user_location_marker) {
+        // اگر نشانگر کاربر قبلاً وجود دارد، آن را حذف می‌کنیم
+        if (user_location_marker) {
             map.removeLayer(user_location_marker);
+        }
+
+        // ایجاد یا به روزرسانی نشانگر موقعیت کاربر
+        let user_navigator_location = L.marker([location.coords.latitude, location.coords.longitude], {icon: navigator_icon}).addTo(map);
+
+        // اگر routeControl قبلاً ایجاد شده باشد، فقط مسیر را به روز می‌کنیم
+        if (routeControl) {
+            routeControl.setWaypoints([L.latLng(location.coords.latitude, location.coords.longitude), L.latLng(MQ_lat, MQ_lon)]);
+        } else {
+            // ایجاد کنترل مسیریابی جدید
+            routeControl = L.Routing.control({
+                waypoints: [L.latLng(location.coords.latitude, location.coords.longitude), L.latLng(MQ_lat, MQ_lon)],
+                routeWhileDragging: false,
+                createMarker: function () {
+                    return null;  // جلوگیری از ایجاد نشانگر برای هر نقطه مسیر
+                },
+                lineOptions: {
+                    styles: [
+                        { color: 'blue', weight: 8, opacity: 0.6 }
+                    ]
+                },
+                fitSelectedRoutes: false
+            }).addTo(map);
+        }
+
+        // ردیابی مداوم موقعیت کاربر با استفاده از watchPosition
+        navigator.geolocation.watchPosition(function(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            // به روزرسانی موقعیت نشانگر
+            user_navigator_location.setLatLng([lat, lon]);
+
+            // حرکت نقشه به موقعیت جدید
+            map.flyTo([lat, lon], 16);
+
+            // به‌روزرسانی مسیر با نقطه جدید موقعیت کاربر
+            routeControl.setWaypoints([L.latLng(lat, lon), L.latLng(MQ_lat, MQ_lon)]);
+
+            // به‌روز کردن موقعیت کاربر روی مسیر
+            let closestPoint = routeControl.getRoute().closestPoint([lat, lon]);
+            user_navigator_location.setLatLng(closestPoint.latLng);
+
+        }, function(error) {
+            console.error("خطا در دریافت موقعیت:", error);
+            alert("خطا در دسترسی به موقعیت مکانی. ممکن است دسترسی غیرفعال باشد.");
+        }, {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 5000
+        });
+
+    } catch (error) {
+        console.error('خطا در اجرای تابع:', error);
     }
-    if (MAB_marker) {
-          map.removeLayer(MAB_marker);
-    }
-
-    if (routeControl) {
-        // فقط به روزرسانی نقاط مسیر
-        routeControl.setWaypoints([L.latLng(location.lat, location.lng), L.latLng(MQ_lat, MQ_lon)]);
-    } else {
-        // ایجاد کنترل مسیریابی جدید
-        let routeControl = L.Routing.control({
-            waypoints: [L.latLng(location.lat, location.lng), L.latLng(MQ_lat, MQ_lon)],
-            routeWhileDragging: false,
-            createMarker: function () {
-                return null;
-            },
-            lineOptions: {
-                styles: [
-                    { color: 'blue', weight: 8, opacity: 0.6 }
-                ]
-            },
-            fitSelectedRoutes: false
-        }).addTo(map);
-    }
-
-
-    map.on('locationfound', function (e) {
-        
-
-        // به روزرسانی موقعیت کاربر و اضافه کردن نشانگر جدید
-        user_navigator_location.setLatLng(e.latlng.lat,e.latlng.lng);
-
-        map.flyTo([e.latlng.lat, e.latlng.lng], 18);
-
-        // به‌روزرسانی مسیریابی
-        routeControl.setWaypoints([L.latLng(e.latlng.lat,e.latlng.lng), L.latLng(MQ_lat, MQ_lon)]);
-
-        // به‌روز کردن موقعیت کاربر روی مسیر
-        let L_ine = routeControl.getRoute().closestPoint(e.latlng.lat,e.latlng.lng);
-        user_navigator_location.setLatLng(L_ine.latLng);
-    });
-
-    // مدیریت خطا در موقعیت‌یابی
-    map.on('locationerror', function (e) {
-        alert("خطا در دسترسی به موقعیت مکانی. ممکن است دسترسی غیرفعال باشد." + e);
-    });
 };
 
 

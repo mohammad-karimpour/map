@@ -196,32 +196,33 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 
 /* ----------------- داده ها ----------------- */
 let location_user = () => {
-    return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-            // شروع ردیابی موقعیت کاربر به صورت مداوم
-            const watchId = navigator.geolocation.watchPosition(
-                function(position) {
-                    // ارسال موقعیت جدید به تابع resolve
-                    resolve(position);
-                },
-                function(error) {
-                    // در صورت بروز خطا، ارسال خطا به تابع reject
-                    reject(error);
-                },
-                {
-                    enableHighAccuracy: true, // درخواست دقت بالا
-                    maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
-                    timeout: 5000             // تایم‌اوت برای دریافت موقعیت
-                }
-            );
-        } else {
-            reject(new Error("Geolocation is not supported by this browser."));
-        }
-    });
+    return {coords:{longitude: 12.1454,latitude:12.4589}}
+    // return new Promise((resolve, reject) => {
+    //     if (navigator.geolocation) {
+    //         // شروع ردیابی موقعیت کاربر به صورت مداوم
+    //         const watchId = navigator.geolocation.watchPosition(
+    //             function(position) {
+    //                 // ارسال موقعیت جدید به تابع resolve
+    //                 resolve(position);
+    //             },
+    //             function(error) {
+    //                 // در صورت بروز خطا، ارسال خطا به تابع reject
+    //                 reject(error);
+    //             },
+    //             {
+    //                 enableHighAccuracy: true, // درخواست دقت بالا
+    //                 maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
+    //                 timeout: 5000             // تایم‌اوت برای دریافت موقعیت
+    //             }
+    //         );
+    //     } else {
+    //         reject(new Error("Geolocation is not supported by this browser."));
+    //     }
+    // });
 };
 
 /*------------------توابع------------------- */
-
+let user_location_marker = null;
 let activ_user_locatin = async () => {
     try {
         // ابتدا موقعیت اولیه کاربر را پیدا می‌کنیم
@@ -290,7 +291,8 @@ let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
     routeControl.on('routesfound', function(e) {
         // تنظیم نمای نقشه بر روی نقطه مبدا
         map.setView([MB_lat, MB_lon], 11);
-
+        console.log(e);
+        
         // فعال‌سازی دکمه برای شروع مسیریابی
         let startrunnav = document.getElementById('startrunnav');
         startrunnav.classList.remove("show");
@@ -309,10 +311,23 @@ let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
     // });
 };
 
+let deleteNavigator = ()=>{
+    // حذف کنترل مسیریابی از نقشه
+    if (routeControl !== null && routeControl !== undefined) {
+        map.removeControl(routeControl);  // حذف کنترل از نقشه
+        routeControl = null;  // مقداردهی دوباره به null برای جلوگیری از مشکلات بعدی
+    } else {
+        console.log("Control is not defined or already removed");
+    }
+}
 
 
 
 
+
+let startrunnav = null;
+let endnav = null;
+let user_navigator_location = null;
 
 
 let run_navigator_user = async (MQ_lat, MQ_lon) => {
@@ -323,10 +338,11 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         // اگر نشانگر کاربر قبلاً وجود دارد، آن را حذف می‌کنیم
         if (user_location_marker) {
             map.removeLayer(user_location_marker);
+            user_location_marker = null; // مقداردهی مجدد برای جلوگیری از مشکلات بعدی
         }
 
         // ایجاد یا به روزرسانی نشانگر موقعیت کاربر
-        let user_navigator_location = L.marker([location.coords.latitude, location.coords.longitude], {icon: navigator_icon}).addTo(map);
+        user_navigator_location = L.marker([location.coords.latitude, location.coords.longitude], {icon: navigator_icon}).addTo(map);
 
         // اگر routeControl قبلاً ایجاد شده باشد، فقط مسیر را به روز می‌کنیم
         if (routeControl) {
@@ -337,7 +353,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
                 waypoints: [L.latLng(location.coords.latitude, location.coords.longitude), L.latLng(MQ_lat, MQ_lon)],
                 routeWhileDragging: true,
                 createMarker: function () {
-                    return null;
+                    return null; // عدم نمایش مارکرها
                 },
                 lineOptions: {
                     styles: [
@@ -347,36 +363,40 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
                 fitSelectedRoutes: false
             }).addTo(map);
         }
-
+        // تغییر متن دکمه
+        startrunnav = document.getElementById('startrunnav');
+        startrunnav.classList.add("show");
+        endnav = document.getElementById('endrunnav');
+        endnav.classList.remove('show')
 
         routeControl.on('waypointreached', function(event) {
-            var waypoint = event.waypoint;  // نقطه‌ای که کاربر به آن رسیده
-            alert(waypoint)
-          });
-        
-;
-        
+            var waypoint = event.waypoint;
+            alert(waypoint);
+        });
 
-        map.setZoom(22)
+        map.setZoom(22);
+
+        // پیگیری موقعیت کاربر
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
-            let firstC = null;
-
-            routeControl.on('routesfound', function(e) {
-                firstC = e.routes[0].coordinates[0]
-
-            })
-  
             // به روزرسانی موقعیت نشانگر
-            user_navigator_location.setLatLng([firstC.lat, firstC.lng]);
-            routingControl.setWaypoints([L.latLng(lat, lon), routingControl.getWaypoints()[1]]);
-
-            // حرکت نقشه به موقعیت جدید
+            user_navigator_location.setLatLng([lat, lon]);
+            routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 
-  
+
+            let speedusernumber = document.getElementById('speedUser');
+            speedusernumber.innerHTML = position.coords.speed * 3.6
+            //user_navigator_location.setRotationAngle(position.coords.heading);
+            let heading = position.coords.heading;  // جهت حرکت به درجه
+            
+            if (heading !== null) {
+                map.setBearing(-heading);
+            }
+
+
 
 
         }, function(error) {
@@ -396,8 +416,19 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
 
 
+let delete_run_navigator_user = () => {
+    if (user_navigator_location !== null) {
+        map.removeLayer(user_navigator_location);
+        user_navigator_location = null;
+    }
 
+    map.setZoom(10);
 
+    startrunnav.classList.remove('show')
+    endnav.classList.add('show')
+
+    
+}
 
 
 
@@ -422,7 +453,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مکان</button><button id="startrunnav" class="show">شروع</button>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مکان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
         return container;
     }
 });

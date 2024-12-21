@@ -221,7 +221,6 @@ let location_user = () => {
     });
 };
 
-
 /*------------------توابع------------------- */
 let user_location_marker = null;
 let activ_user_locatin = async () => {
@@ -370,13 +369,13 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         endnav = document.getElementById('endrunnav');
         endnav.classList.remove('show')
 
-        routeControl.on('waypointreached', function(event) {
-            var waypoint = event.waypoint;
-            alert(waypoint);
-        });
+        // routeControl.on('waypointreached', function(event) {
+        //     var waypoint = event.waypoint;
+        //     alert(waypoint);
+        // });
 
         map.setZoom(22);
-
+        let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
@@ -388,10 +387,14 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             map.panTo([lat, lon]);
 
 
-            let speedusernumber = document.getElementById('speedUser');
-            speedusernumber.innerHTML = position.coords.speed * 3.6
-            user_navigator_location.setRotationAngle(position.coords.heading);
             
+            speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
+            //user_navigator_location.setRotationAngle(position.coords.heading);
+            let heading = position.coords.heading;  // جهت حرکت به درجه
+            
+            if (heading !== null) {
+                map.setBearing(-heading);
+            }
 
 
 

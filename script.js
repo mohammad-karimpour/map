@@ -337,7 +337,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
                 waypoints: [L.latLng(location.coords.latitude, location.coords.longitude), L.latLng(MQ_lat, MQ_lon)],
                 routeWhileDragging: true,
                 createMarker: function () {
-                    return null;  // جلوگیری از ایجاد نشانگر برای هر نقطه مسیر
+                    return null;
                 },
                 lineOptions: {
                     styles: [
@@ -353,57 +353,30 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             var waypoint = event.waypoint;  // نقطه‌ای که کاربر به آن رسیده
             alert(waypoint)
           });
-        // ردیابی مداوم موقعیت کاربر با استفاده از watchPosition
-
         
+;
+        
+
         map.setZoom(22)
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
+            let firstC = null;
+
+            routeControl.on('routesfound', function(e) {
+                firstC = e.routes[0].coordinates[0]
+
+            })
+  
             // به روزرسانی موقعیت نشانگر
-            user_navigator_location.setLatLng([lat, lon]);
-            routingControl.setWaypoints([[lat,lon], routingControl.getWaypoints()[1]]);
+            user_navigator_location.setLatLng([firstC.lat, firstC.lng]);
+            routingControl.setWaypoints([L.latLng(lat, lon), routingControl.getWaypoints()[1]]);
 
             // حرکت نقشه به موقعیت جدید
             map.panTo([lat, lon]);
 
-            if (routeControl && routeControl.getRoute()) {
-                // دریافت مسیر محاسبه‌شده
-                let route = routeControl.getRoute();
-                
-                // دریافت لیست نقاط مسیر
-                let routeLatLngs = route.getLatLngs(); // لیستی از نقاط مسیر (LatLng)
-                
-                // موقعیت فعلی کاربر
-                let userLocation = L.latLng(lat, lon); // فرض می‌کنیم که lat و lon مختصات فعلی کاربر هستند
-                
-                // متغیر برای ذخیره نزدیک‌ترین نقطه و کمترین فاصله
-                let closestPoint = null;
-                let minDistance = Infinity;
-                
-                // حلقه برای بررسی هر نقطه مسیر و پیدا کردن نزدیک‌ترین نقطه به موقعیت کاربر
-                for (let i = 0; i < routeLatLngs.length; i++) {
-                  let point = routeLatLngs[i];
-                  let distance = userLocation.distanceTo(point); // فاصله بین موقعیت کاربر و نقطه مسیر
-                  
-                  // اگر این نقطه به موقعیت کاربر نزدیک‌تر است، آن را به‌عنوان نزدیک‌ترین نقطه در نظر بگیریم
-                  if (distance < minDistance) {
-                    minDistance = distance;
-                    closestPoint = point;
-                  }
-                }
-                
-                if (closestPoint) {
-                  // به‌روزرسانی موقعیت نشانگر کاربر به نزدیک‌ترین نقطه
-                  user_navigator_location.setLatLng(closestPoint);
-                } else {
-                  console.error("نزدیک‌ترین نقطه پیدا نشد.");
-                }
-              
-              } else {
-                console.error("مسیر هنوز محاسبه نشده است.");
-              }
+  
 
 
         }, function(error) {

@@ -356,6 +356,7 @@ map.setZoom(22)
 
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
+            routingControl.setWaypoints([[lat,lon], routingControl.getWaypoints()[1]]);
 
             // حرکت نقشه به موقعیت جدید
             map.panTo([lat, lon] );

@@ -196,29 +196,31 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 
 /* ----------------- داده ها ----------------- */
 let location_user = () => {
-    //return {coords:{longitude: 12.1454,latitude:12.4589}}
-    return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-            // شروع ردیابی موقعیت کاربر به صورت مداوم
-            const watchId = navigator.geolocation.watchPosition(
-                function(position) {
-                    // ارسال موقعیت جدید به تابع resolve
-                    resolve(position);
-                },
-                function(error) {
-                    // در صورت بروز خطا، ارسال خطا به تابع reject
-                    reject(error);
-                },
-                {
-                    enableHighAccuracy: true, // درخواست دقت بالا
-                    maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
-                    timeout: 5000             // تایم‌اوت برای دریافت موقعیت
-                }
-            );
-        } else {
-            reject(new Error("Geolocation is not supported by this browser."));
-        }
-    });
+    let L_O = 12.1454;
+    let LN = 12.4589
+    return {coords:{longitude: L_O,latitude:LN}}
+    // return new Promise((resolve, reject) => {
+    //     if (navigator.geolocation) {
+    //         // شروع ردیابی موقعیت کاربر به صورت مداوم
+    //         const watchId = navigator.geolocation.watchPosition(
+    //             function(position) {
+    //                 // ارسال موقعیت جدید به تابع resolve
+    //                 resolve(position);
+    //             },
+    //             function(error) {
+    //                 // در صورت بروز خطا، ارسال خطا به تابع reject
+    //                 reject(error);
+    //             },
+    //             {
+    //                 enableHighAccuracy: true, // درخواست دقت بالا
+    //                 maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
+    //                 timeout: 5000             // تایم‌اوت برای دریافت موقعیت
+    //             }
+    //         );
+    //     } else {
+    //         reject(new Error("Geolocation is not supported by this browser."));
+    //     }
+    // });
 };
 
 /*------------------توابع------------------- */
@@ -240,7 +242,9 @@ let activ_user_locatin = async () => {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
-            user_location_marker.setLatLng([lat, lon]);  // به‌روزرسانی موقعیت نشانگر
+            if (user_location_marker !== null) {
+                user_location_marker.setLatLng([lat, lon]);
+            }
             
         }, function(error) {
             console.error('موقعیت پیدا نشد:', error);  // در صورت خطا، پیام خطا را نمایش می‌دهیم
@@ -311,7 +315,15 @@ let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
     // });
 };
 
-
+let deleteNavigator = ()=>{
+    // حذف کنترل مسیریابی از نقشه
+    if (routeControl !== null && routeControl !== undefined) {
+        map.removeControl(routeControl);  // حذف کنترل از نقشه
+        routeControl = null;  // مقداردهی دوباره به null برای جلوگیری از مشکلات بعدی
+    } else {
+        console.log("Control is not defined or already removed");
+    }
+}
 
 
 
@@ -380,7 +392,13 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
 
             
+            speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
+            //user_navigator_location.setRotationAngle(position.coords.heading);
+            let heading = position.coords.heading;  // جهت حرکت به درجه
             
+            if (heading !== null) {
+                map.setBearing(-heading);
+            }
 
 
 

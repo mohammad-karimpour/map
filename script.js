@@ -386,7 +386,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
                 userLocationMarker.setLatLng(closestPoint.latlng);
             }
 
-            routeControl.setWaypoints([L.latLng(lat, lon), routeWaypoints[1]]);
+            //routeControl.setWaypoints([L.latLng(lat, lon), routeWaypoints[1]]);
             map.panTo([lat, lon]);
 
             

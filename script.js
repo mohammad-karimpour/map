@@ -385,6 +385,13 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
+            L.Routing.plan([L.latLng(lat,lon), L.latLng(routeControl.getWaypoints()[1])], {
+                createMarker: function() { return null; },  // عدم نمایش مارکر
+                routeWhileDragging: true,
+                lineOptions: {
+                    styles: [{ color: 'blue', weight: 5, opacity: 0.6 }]
+                }
+            }).addTo(map);
             //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 

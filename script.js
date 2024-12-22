@@ -375,7 +375,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         //     var waypoint = event.waypoint;
         //     alert(waypoint);
         // });
-        routeControl.setRouteWhileDragging(true);
+      
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر

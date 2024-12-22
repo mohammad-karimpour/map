@@ -196,31 +196,29 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 
 /* ----------------- داده ها ----------------- */
 let location_user = () => {
-    let L_O = 12.1454;
-    let LN = 12.4589
-    return {coords:{longitude: L_O,latitude:LN}}
-    // return new Promise((resolve, reject) => {
-    //     if (navigator.geolocation) {
-    //         // شروع ردیابی موقعیت کاربر به صورت مداوم
-    //         const watchId = navigator.geolocation.watchPosition(
-    //             function(position) {
-    //                 // ارسال موقعیت جدید به تابع resolve
-    //                 resolve(position);
-    //             },
-    //             function(error) {
-    //                 // در صورت بروز خطا، ارسال خطا به تابع reject
-    //                 reject(error);
-    //             },
-    //             {
-    //                 enableHighAccuracy: true, // درخواست دقت بالا
-    //                 maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
-    //                 timeout: 5000             // تایم‌اوت برای دریافت موقعیت
-    //             }
-    //         );
-    //     } else {
-    //         reject(new Error("Geolocation is not supported by this browser."));
-    //     }
-    // });
+
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            // شروع ردیابی موقعیت کاربر به صورت مداوم
+            const watchId = navigator.geolocation.watchPosition(
+                function(position) {
+                    // ارسال موقعیت جدید به تابع resolve
+                    resolve(position);
+                },
+                function(error) {
+                    // در صورت بروز خطا، ارسال خطا به تابع reject
+                    reject(error);
+                },
+                {
+                    enableHighAccuracy: true, // درخواست دقت بالا
+                    maximumAge: 0,            // استفاده نکردن از موقعیت قدیمی
+                    timeout: 5000             // تایم‌اوت برای دریافت موقعیت
+                }
+            );
+        } else {
+            reject(new Error("Geolocation is not supported by this browser."));
+        }
+    });
 };
 
 /*------------------توابع------------------- */

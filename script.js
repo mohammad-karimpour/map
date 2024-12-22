@@ -384,17 +384,17 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
             routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
-            map.panTo([lat, lon]);
+            //map.panTo([lat, lon]);
 
 
             
             speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
             //user_navigator_location.setRotationAngle(position.coords.heading);
-            // let heading = position.coords.heading;  // جهت حرکت به درجه
+             let heading = position.coords.heading;  // جهت حرکت به درجه
             
-            // if (heading !== null) {
-            //     map.setBearing(-heading);
-            // }
+             if (heading !== null) {
+                 map.setBearing(-heading);
+             }
 
 
 

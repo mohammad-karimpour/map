@@ -375,7 +375,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         //     var waypoint = event.waypoint;
         //     alert(waypoint);
         // });
-
+        routeControl.setRouteWhileDragging(true);
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
@@ -385,7 +385,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
-            routeControl.setRouteWhileDragging(true);
+            
 
             //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);

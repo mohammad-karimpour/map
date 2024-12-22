@@ -311,15 +311,7 @@ let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
     // });
 };
 
-let deleteNavigator = ()=>{
-    // حذف کنترل مسیریابی از نقشه
-    if (routeControl !== null && routeControl !== undefined) {
-        map.removeControl(routeControl);  // حذف کنترل از نقشه
-        routeControl = null;  // مقداردهی دوباره به null برای جلوگیری از مشکلات بعدی
-    } else {
-        console.log("Control is not defined or already removed");
-    }
-}
+
 
 
 
@@ -384,7 +376,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
             routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
-            //map.panTo([lat, lon]);
+            map.panTo([lat, lon]);
 
 
             

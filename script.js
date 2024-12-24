@@ -390,7 +390,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 
-
+            console.log(position);
             
             speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
             //user_navigator_location.setRotationAngle(position.coords.heading);

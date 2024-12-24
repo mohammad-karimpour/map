@@ -55,6 +55,8 @@ let navigator_icon = L.icon({
 
 /* ------------------ آپشن ها ----------------- */
 
+var scaleControl = L.control.scale().addTo(map);
+
 // افزودن جستجوگر مکان
 L.Control.geocoder({
     collapsed: true,

@@ -385,14 +385,19 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
 
+            var currentZoom = map.getZoom();
+            var currentCenter = map.getCenter(); 
+
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
-            
-
-            //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
+            routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 
             console.log(position);
+
+            map.setView(currentCenter, currentZoom);
+            
+            ggg.setLatLng(routeControl.options.waypoints[0].lat,routeControl.options.waypoints[0].lng)
             
             speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
             //user_navigator_location.setRotationAngle(position.coords.heading);
@@ -459,7 +464,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مکان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مllکان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
         return container;
     }
 });

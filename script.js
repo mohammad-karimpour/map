@@ -397,14 +397,14 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
             map.setView(currentCenter, currentZoom);
             
-            ggg.setLatLng(routeControl.options.waypoints[0].lat,routeControl.options.waypoints[0].lng)
+            ggg.setLatLng([routeControl.options.waypoints[0].lat,routeControl.options.waypoints[0].lng])
             
             speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
             //user_navigator_location.setRotationAngle(position.coords.heading);
             let heading = position.coords.heading;  // جهت حرکت به درجه
             
             if (heading !== null) {
-                map.setBearing(-heading);
+                map.setBearing(Math.floor(heading));
             }
 
 

@@ -378,6 +378,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
+        routeControl.disableZoom()
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
@@ -385,46 +386,23 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
 
             // به روزرسانی موقعیت نشانگر
+            
             user_navigator_location.setLatLng([lat, lon]);
-            //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
-            // map.panTo([lat, lon]);
+            routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
+            map.panTo([lat, lon]);
 
-            // var routePlan = routeControl.getPlan();
+            var routePlan = routeControl.getPlan();
 
-            // var nearestPoint = L.GeometryUtil.closest(map, routePlan, userLatLng);
+            var nearestPoint = L.GeometryUtil.closest(map, routePlan, userLatLng);
             
 
-            // if (closest) {
-            //     const closestLatLng = map.layerPointToLatLng(nearestPoint);
-            //     user_navigator_location.setLatLng(closestLatLng);
-            // }
-
-
-
-            if (routeControl._routes && routeControl._routes.length > 0) {
-        const route = routeControl.getRoutes()[0];  // گرفتن اولین مسیر
-        const polyline = route.getRoute()._layers[Object.keys(route.getRoute()._layers)[0]]; // گرفتن لایه Polyline مسیر
-        const latlngs = polyline.getLatLngs();  // گرفتن آرایه نقاط مسیر
-                
-                let closestLatLng = null;
-                let minDistance = Infinity;
-        
-                for (let i = 0; i < latlngs.length - 1; i++) {
-                    const p1 = latlngs[i];
-                    const p2 = latlngs[i + 1];
-                    const closestPointOnSegment = L.GeometryUtil.closest(map, [p1, p2], userLatLng);
-                    const distance = L.GeometryUtil.distance(map, userLatLng, closestPointOnSegment);
-        
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestLatLng = closestPointOnSegment;
-                    }
-                }
-        
-                if (closestLatLng) {
-                    user_navigator_location.setLatLng(closestLatLng);
-                }
+            if (closest) {
+                const closestLatLng = map.layerPointToLatLng(nearestPoint);
+                user_navigator_location.setLatLng(closestLatLng);
             }
+
+
+
 
 
 

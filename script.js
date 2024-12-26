@@ -402,10 +402,10 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
 
             if (routeControl._routes && routeControl._routes.length > 0) {
-                const route = routeControl._routes[0];
-                const polyline = route.getLayer();
-                const latlngs = polyline.getLatLngs();
-        
+        const route = routeControl.getRoutes()[0];  // گرفتن اولین مسیر
+        const polyline = route.getRoute()._layers[Object.keys(route.getRoute()._layers)[0]]; // گرفتن لایه Polyline مسیر
+        const latlngs = polyline.getLatLngs();  // گرفتن آرایه نقاط مسیر
+                
                 let closestLatLng = null;
                 let minDistance = Infinity;
         
@@ -493,7 +493,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">م5کان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">م8کان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
         return container;
     }
 });

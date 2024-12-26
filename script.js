@@ -18,7 +18,7 @@ let baseLayers = {
     "نرمال": osmLayer,
     'سفید': whitemap,
     "ماهواره ای" : satelliteLayer,
-    "دارک": darkmap
+    "دارک": darkmap,
        
 };
 L.control.layers(baseLayers).addTo(map);
@@ -50,12 +50,7 @@ let navigator_icon = L.icon({
 
 
 
-
-
-
 /* ------------------ آپشن ها ----------------- */
-
-var scaleControl = L.control.scale().addTo(map);
 
 // افزودن جستجوگر مکان
 L.Control.geocoder({
@@ -67,6 +62,8 @@ L.Control.geocoder({
     map.flyTo([event.geocode.center.lat,event.geocode.center.lng], 12);
 }).addTo(map);
 
+
+var scaleControl = L.control.scale().addTo(map);
 
 
 
@@ -198,7 +195,6 @@ document.getElementById('copyCoords').addEventListener('click', function() {
 
 /* ----------------- داده ها ----------------- */
 let location_user = () => {
-
     return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
             // شروع ردیابی موقعیت کاربر به صورت مداوم
@@ -222,6 +218,8 @@ let location_user = () => {
         }
     });
 };
+
+
 
 /*------------------توابع------------------- */
 let user_location_marker = null;
@@ -290,12 +288,13 @@ let show_routing = (MB_lat, MB_lon, MQ_lat, MQ_lon) => {
             }
         }).addTo(map);
     }
-
+    
     // رویداد routesfound: وقتی مسیر پیدا شد
     routeControl.on('routesfound', function(e) {
         // تنظیم نمای نقشه بر روی نقطه مبدا
         map.setView([MB_lat, MB_lon], 11);
-        console.log(e);
+        
+        
         
         // فعال‌سازی دکمه برای شروع مسیریابی
         let startrunnav = document.getElementById('startrunnav');
@@ -324,6 +323,8 @@ let deleteNavigator = ()=>{
         console.log("Control is not defined or already removed");
     }
 }
+
+
 
 
 
@@ -372,39 +373,37 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         startrunnav.classList.add("show");
         endnav = document.getElementById('endrunnav');
         endnav.classList.remove('show')
+        
 
-        // routeControl.on('waypointreached', function(event) {
-        //     var waypoint = event.waypoint;
-        //     alert(waypoint);
-        // });
-      
+
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
+            var userLatLng = L.latLng(lat, lon);
 
-            var currentZoom = map.getZoom();
-            var currentCenter = map.getCenter(); 
 
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
             routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 
-            console.log(position);
+            var routePlan = routeControl.getPlan();
 
-            map.setView(currentCenter, currentZoom);
-            
-            ggg.setLatLng([routeControl.options.waypoints[0].lat,routeControl.options.waypoints[0].lng])
+            var nearestPoint = L.GeometryUtil.closest(map, routePlan, userLatLng);
+            user_navigator_location.setLatLng(nearestPoint);
+
+
+
             
             speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
             //user_navigator_location.setRotationAngle(position.coords.heading);
             let heading = position.coords.heading;  // جهت حرکت به درجه
             
             if (heading !== null) {
-                map.setBearing(Math.floor(heading));
+                map.setBearing(Math.floor(-heading));
             }
 
 
@@ -423,7 +422,6 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         console.error('خطا در اجرای تابع:', error);
     }
 };
-
 
 
 
@@ -464,7 +462,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مllکان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">مکان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
         return container;
     }
 });

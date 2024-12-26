@@ -326,7 +326,7 @@ let deleteNavigator = ()=>{
 
 
 
-map.setBearing(45)
+
 
 
 

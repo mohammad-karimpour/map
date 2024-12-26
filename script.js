@@ -374,12 +374,10 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         endnav = document.getElementById('endrunnav');
         endnav.classList.remove('show')
         
-
-       var lastHeading = null; 
+ 
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
-        map.setBearing(Math.floor(47.2));
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
@@ -389,25 +387,56 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
             //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
-            map.panTo([lat, lon]);
+            // map.panTo([lat, lon]);
 
-            var routePlan = routeControl._routes[0];
+            // var routePlan = routeControl.getPlan();
 
-            var nearestPoint = L.GeometryUtil.closest(map, routePlan.getLayer(), userLatLng);
-            user_navigator_location.setLatLng(nearestPoint);
+            // var nearestPoint = L.GeometryUtil.closest(map, routePlan, userLatLng);
+            
+
+            // if (closest) {
+            //     const closestLatLng = map.layerPointToLatLng(nearestPoint);
+            //     user_navigator_location.setLatLng(closestLatLng);
+            // }
+
+
+
+            if (routeControl._routes && routeControl._routes.length > 0) {
+                const route = routeControl._routes[0];
+                const polyline = route.getLayer();
+                const latlngs = polyline.getLatLngs();
+        
+                let closestLatLng = null;
+                let minDistance = Infinity;
+        
+                for (let i = 0; i < latlngs.length - 1; i++) {
+                    const p1 = latlngs[i];
+                    const p2 = latlngs[i + 1];
+                    const closestPointOnSegment = L.GeometryUtil.closest(map, [p1, p2], userLatLng);
+                    const distance = L.GeometryUtil.distance(map, userLatLng, closestPointOnSegment);
+        
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestLatLng = closestPointOnSegment;
+                    }
+                }
+        
+                if (closestLatLng) {
+                    user_navigator_location.setLatLng(closestLatLng);
+                }
+            }
+
+
+
 
 
 
             
             speedusernumber.innerHTML = Math.floor(position.coords.speed * 3.6)
-            //user_navigator_location.setRotationAngle(position.coords.heading);
-            let heading = position.coords.heading;  // جهت حرکت به درجه
-            
-      if (heading !== null && heading !== lastHeading) {
-        lastHeading = heading;
-        map.setBearing(Math.floor(-heading)); // تغییر زاویه نقشه
-      }
-
+            if (position.coords.heading !== null) {
+                userMarker.setRotationAngle(position.coords.heading);
+                map.setBearing(-position.coords.heading);
+            }
 
 
 
@@ -464,7 +493,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">م2کان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">م5کان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
         return container;
     }
 });

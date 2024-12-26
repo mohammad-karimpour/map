@@ -375,7 +375,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         endnav.classList.remove('show')
         
 
-
+       var lastHeading = null; 
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
@@ -387,7 +387,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
 
             // به روزرسانی موقعیت نشانگر
             user_navigator_location.setLatLng([lat, lon]);
-            routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
+            //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 
             var routePlan = routeControl.getPlan();
@@ -402,9 +402,10 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             //user_navigator_location.setRotationAngle(position.coords.heading);
             let heading = position.coords.heading;  // جهت حرکت به درجه
             
-            if (heading !== null) {
-                map.setBearing(Math.floor(-heading));
-            }
+      if (heading !== null && heading !== lastHeading) {
+        lastHeading = heading;
+        map.setBearing(Math.floor(-heading)); // تغییر زاویه نقشه
+      }
 
 
 

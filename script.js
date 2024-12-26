@@ -326,7 +326,7 @@ let deleteNavigator = ()=>{
 
 
 
-
+map.setBearing(45)
 
 
 
@@ -396,10 +396,10 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             var nearestPoint = L.GeometryUtil.closest(map, routePlan, userLatLng);
             
 
-            if (closest) {
+          
                 const closestLatLng = map.layerPointToLatLng(nearestPoint);
                 user_navigator_location.setLatLng(closestLatLng);
-            }
+            
 
 
 
@@ -471,7 +471,7 @@ var customControl = L.Control.extend({
 
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'custom-control');
-        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">م8کان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
+        container.innerHTML = '<button onclick="activ_user_locatin()" class="gps_button">8م8کان</button><button id="startrunnav" class="show">شروع</button><button id="endrunnav" onclick="delete_run_navigator_user()" class="show">پایان</button><h1 id="speedUser">0</h1>';
         return container;
     }
 });

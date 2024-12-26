@@ -379,6 +379,7 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
         map.setZoom(22);
         let speedusernumber = document.getElementById('speedUser');
         // پیگیری موقعیت کاربر
+        map.setBearing(Math.floor(47.2));
         navigator.geolocation.watchPosition(function(position) {
             let lat = position.coords.latitude;
             let lon = position.coords.longitude;
@@ -390,9 +391,9 @@ let run_navigator_user = async (MQ_lat, MQ_lon) => {
             //routeControl.setWaypoints([L.latLng(lat, lon), routeControl.getWaypoints()[1]]);
             map.panTo([lat, lon]);
 
-            var routePlan = routeControl.getPlan();
+            var routePlan = routeControl._routes[0];
 
-            var nearestPoint = L.GeometryUtil.closest(map, routePlan, userLatLng);
+            var nearestPoint = L.GeometryUtil.closest(map, routePlan.getLayer(), userLatLng);
             user_navigator_location.setLatLng(nearestPoint);
 
 
